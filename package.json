@@ -1,0 +1,18 @@
+{
+  "name": "langserver-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "prismjs": "^1.17.1",
+    "vscode-jsonrpc": "^4.0.0",
+    "vscode-languageserver-protocol": "^3.14.1",
+    "vscode-languageserver-types": "^3.14.0",
+    "vscode-uri": "^2.0.3"
+  }
+}
