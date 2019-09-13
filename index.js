@@ -19,19 +19,19 @@ const test_file = path.join(project_path, 'index.js');
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// DONE 0. Parse symbols and find references, and store this
-//         information in a key-value store. Start only with
-//         function symbols and store everything in a JSON
-//         file, using the line and offset information to
-//         create the keys
-//
-// DONE 1. Associate tokens with line and offset information
+// DONE 0. Parse symbols and find references, and store this   -----|
+//         information in a key-value store. Start only with        |
+//         function symbols and store everything in a JSON          |
+//         file, using the line and offset information to           | FIXME, these need to be
+//         create the keys                                          | in sync with each other
+//                                                                  |
+// DONE 1. Associate tokens with line and offset information   -----|
 //
 //      2. Give html span elements a link based on the line
 //         and offset information if they are a symbol or a
 //         reference to a symbol
 //
-//      3. Load the JSON file into lunrjs and implement a basic
+//      3. Load the JSON file into lunrjs and test a basic
 //         query for the references of a symbol
 //
 //      4. Implement link-handling so that the lunrjs query is

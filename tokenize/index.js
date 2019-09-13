@@ -18,6 +18,9 @@ const cliSpec = [
 ];
 
 
+main();
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -79,9 +82,6 @@ function main() {
 
     console.log("", logSymbols.success, "done");
 }
-
-main();
-
 
 function find_javascript_files(dir) {
     var files = [];
