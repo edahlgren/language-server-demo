@@ -19,15 +19,15 @@ const test_file = path.join(project_path, 'index.js');
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// DONE 0. Parse symbols and find references, and store this   -----|
-//         information in a key-value store. Start only with        |
-//         function symbols and store everything in a JSON          |
-//         file, using the line and offset information to           | FIXME, these need to be
-//         create the keys                                          | in sync with each other
-//                                                                  |
-// DONE 1. Associate tokens with line and offset information   -----|
+// DONE 0. Parse symbols and find references, and store this
+//         information in a key-value store. Start only with
+//         function symbols and store everything in a JSON  
+//         file, using the line and offset information to   
+//         create the keys                                  
+//                                                          
+// DONE 1. Associate tokens with line and offset information
 //
-//      2. Give html span elements a link based on the line
+// DONE 2. Give html span elements a link based on the line
 //         and offset information if they are a symbol or a
 //         reference to a symbol
 //
@@ -37,7 +37,7 @@ const test_file = path.join(project_path, 'index.js');
 //      4. Implement link-handling so that the lunrjs query is
 //         invoked when a link on a symbol is clicked
 //
-//      5. Create anchors to line numbers in the html so that
+// DONE 5. Create anchors to line numbers in the html so that
 //         the query page can jump to a line in a file
 //
 //      6. Create the HTML + CSS for the file pages and the

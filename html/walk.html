@@ -1,13 +1,56 @@
-<span class="token keyword">const</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span>'fs'<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span>'path'<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token keyword">function</span> <span class="token function"><a class="xref" href="/search?symbol=walk.js:L3:9">walk</a></span><span class="token punctuation">(</span><span class="token parameter">dir</span><span class="token punctuation">,</span> <span class="token parameter">callback</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    fs<span class="token punctuation">.</span><span class="token function">readdirSync</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">file</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">let</span> dirPath <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> file<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">let</span> isDirectory <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">statSync</span><span class="token punctuation">(</span>dirPath<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isDirectory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        isDirectory <span class="token operator">?</span>
-            <span class="token function"><a class="xref" href="/search?symbol=walk.js:L3:9">walk</a></span><span class="token punctuation">(</span>dirPath<span class="token punctuation">,</span> callback<span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token function">callback</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> file<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span>
-
-module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token string"><a class="xref" href="/search?symbol=walk.js:L3:9">walk</a></span><span class="token punctuation">;</span>
+<table class="source-file">
+<tbody>
+<tr id="L1">
+<td class="line-number">1</td>
+<td class="code"><span class="token keyword">const</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span>'fs'<span class="token punctuation">)</span><span class="token punctuation">;</span></td>
+</tr>
+<tr id="L2">
+<td class="line-number">2</td>
+<td class="code"><span class="token keyword">const</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span>'path'<span class="token punctuation">)</span><span class="token punctuation">;</span></td>
+</tr>
+<tr id="L3">
+<td class="line-number">3</td>
+<td class="code"></td>
+</tr>
+<tr id="L4">
+<td class="line-number">4</td>
+<td class="code"><span class="token keyword">function</span> <span class="token function"><a class="xref" href="/search?symbol=walk.js:L3:9">walk</a></span><span class="token punctuation">(</span><span class="token parameter">dir</span><span class="token punctuation">,</span> <span class="token parameter">callback</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></td>
+</tr>
+<tr id="L5">
+<td class="line-number">5</td>
+<td class="code">    fs<span class="token punctuation">.</span><span class="token function">readdirSync</span><span class="token punctuation">(</span>dir<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">file</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></td>
+</tr>
+<tr id="L6">
+<td class="line-number">6</td>
+<td class="code">        <span class="token keyword">let</span> dirPath <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> file<span class="token punctuation">)</span><span class="token punctuation">;</span></td>
+</tr>
+<tr id="L7">
+<td class="line-number">7</td>
+<td class="code">        <span class="token keyword">let</span> isDirectory <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token function">statSync</span><span class="token punctuation">(</span>dirPath<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isDirectory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></td>
+</tr>
+<tr id="L8">
+<td class="line-number">8</td>
+<td class="code">        isDirectory <span class="token operator">?</span></td>
+</tr>
+<tr id="L9">
+<td class="line-number">9</td>
+<td class="code">            <span class="token function"><a class="xref" href="/search?symbol=walk.js:L3:9">walk</a></span><span class="token punctuation">(</span>dirPath<span class="token punctuation">,</span> callback<span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token function">callback</span><span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>dir<span class="token punctuation">,</span> file<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></td>
+</tr>
+<tr id="L10">
+<td class="line-number">10</td>
+<td class="code">    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></td>
+</tr>
+<tr id="L11">
+<td class="line-number">11</td>
+<td class="code"><span class="token punctuation">}</span><span class="token punctuation">;</span></td>
+</tr>
+<tr id="L12">
+<td class="line-number">12</td>
+<td class="code"></td>
+</tr>
+<tr id="L13">
+<td class="line-number">13</td>
+<td class="code">module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token string"><a class="xref" href="/search?symbol=walk.js:L3:9">walk</a></span><span class="token punctuation">;</span></td>
+</tr>
+</tbody>
+</table>

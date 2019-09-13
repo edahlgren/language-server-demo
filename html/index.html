@@ -1,14 +1,60 @@
-<span class="token keyword">const</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span>'path'<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">const</span> print <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span>'pretty-print'<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token keyword">const</span> walk <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span>'./walk'<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token keyword">function</span> <span class="token function"><a class="xref" href="/search?symbol=index.js:L5:9">main</a></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token function"><a class="xref" href="/search?symbol=walk.js:L3:9">walk</a></span><span class="token punctuation">(</span>'.'<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">file</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">extname</span><span class="token punctuation">(</span>file<span class="token punctuation">)</span> <span class="token operator">===</span> ".js"<span class="token punctuation">)</span>
-            console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>file<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">print</span><span class="token punctuation">(</span><span class="token punctuation">[</span>'val1'<span class="token punctuation">,</span> 'val2'<span class="token punctuation">,</span> 'val3'<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>leftPadding<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token function"><a class="xref" href="/search?symbol=index.js:L5:9">main</a></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<table class="source-file">
+<tbody>
+<tr id="L1">
+<td class="line-number">1</td>
+<td class="code"><span class="token keyword">const</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span>'path'<span class="token punctuation">)</span><span class="token punctuation">;</span></td>
+</tr>
+<tr id="L2">
+<td class="line-number">2</td>
+<td class="code"><span class="token keyword">const</span> print <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span>'pretty-print'<span class="token punctuation">)</span><span class="token punctuation">;</span></td>
+</tr>
+<tr id="L3">
+<td class="line-number">3</td>
+<td class="code"></td>
+</tr>
+<tr id="L4">
+<td class="line-number">4</td>
+<td class="code"><span class="token keyword">const</span> walk <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span>'./walk'<span class="token punctuation">)</span><span class="token punctuation">;</span></td>
+</tr>
+<tr id="L5">
+<td class="line-number">5</td>
+<td class="code"></td>
+</tr>
+<tr id="L6">
+<td class="line-number">6</td>
+<td class="code"><span class="token keyword">function</span> <span class="token function"><a class="xref" href="/search?symbol=index.js:L5:9">main</a></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></td>
+</tr>
+<tr id="L7">
+<td class="line-number">7</td>
+<td class="code">    <span class="token function"><a class="xref" href="/search?symbol=walk.js:L3:9">walk</a></span><span class="token punctuation">(</span>'.'<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">file</span><span class="token punctuation">)</span> <span class="token punctuation">{</span></td>
+</tr>
+<tr id="L8">
+<td class="line-number">8</td>
+<td class="code">        <span class="token keyword">if</span> <span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">extname</span><span class="token punctuation">(</span>file<span class="token punctuation">)</span> <span class="token operator">===</span> ".js"<span class="token punctuation">)</span></td>
+</tr>
+<tr id="L9">
+<td class="line-number">9</td>
+<td class="code">            console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>file<span class="token punctuation">)</span><span class="token punctuation">;</span></td>
+</tr>
+<tr id="L10">
+<td class="line-number">10</td>
+<td class="code">    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></td>
+</tr>
+<tr id="L11">
+<td class="line-number">11</td>
+<td class="code">    <span class="token function">print</span><span class="token punctuation">(</span><span class="token punctuation">[</span>'val1'<span class="token punctuation">,</span> 'val2'<span class="token punctuation">,</span> 'val3'<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>leftPadding<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></td>
+</tr>
+<tr id="L12">
+<td class="line-number">12</td>
+<td class="code"><span class="token punctuation">}</span></td>
+</tr>
+<tr id="L13">
+<td class="line-number">13</td>
+<td class="code"></td>
+</tr>
+<tr id="L14">
+<td class="line-number">14</td>
+<td class="code"><span class="token function"><a class="xref" href="/search?symbol=index.js:L5:9">main</a></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></td>
+</tr>
+</tbody>
+</table>
