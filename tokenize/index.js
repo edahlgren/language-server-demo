@@ -124,7 +124,10 @@ function html(project, file) {
 
     // How to make HTML element classes. Empty string means no classes
     let make_classes = function(token) {
-        return ['token', token.type];
+        let classes = ['token', token.type];
+        if (token.type && token.type === "function")
+            classes.push('indexed');
+        return classes;
     };
     
     // Tokenize the file

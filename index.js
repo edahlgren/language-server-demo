@@ -25,11 +25,11 @@ const test_file = path.join(project_path, 'index.js');
 //         file, using the line and offset information to
 //         create the keys
 //
-//      1. Associate tokens with line and offset information
+// DONE 1. Associate tokens with line and offset information
 //
-//      2. Give html span elements an link based on the line
-//         and offset information if they are a symbol with
-//         references
+//      2. Give html span elements a link based on the line
+//         and offset information if they are a symbol or a
+//         reference to a symbol
 //
 //      3. Load the JSON file into lunrjs and implement a basic
 //         query for the references of a symbol
