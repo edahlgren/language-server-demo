@@ -1,10 +1,10 @@
 {
   "dir": "/home/erin/langserver-demo/test-project",
   "symbols": {
-    "index.js:L5:0": [
+    "index.js:L5:9": [
       "index.js:L13:0"
     ],
-    "walk.js:L3:0": [
+    "walk.js:L3:9": [
       "walk.js:L8:12",
       "walk.js:L12:17",
       "index.js:L6:4"

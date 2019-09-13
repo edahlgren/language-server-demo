@@ -5,15 +5,15 @@ const path = require('path');
 
 const cli = require('command-line-args');
 const logSymbols = require('log-symbols');
-const matchAll = require("match-all");
-const prism = require('prismjs');
 
+const tokenize = require('./tokenize');
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
 const cliSpec = [
     { name: 'project' },
+    { name: 'xrefs' },
     { name: 'outdir' }
 ];
 
@@ -38,6 +38,14 @@ function main() {
         console.log("project dir (--project) doesn't exist");
         process.exit(1);
     }
+    if (!args.xrefs) {
+        console.log("missing --xrefs: need to pass an xrefs file");
+        process.exit(1);
+    }
+    if (!fs.existsSync(args.xrefs)) {
+        console.log("xrefs file (--xrefs) doesn't exist");
+        process.exit(1);
+    }
     if (!args.outdir) {
         console.log("missing --file: need to pass a javascript file");
         process.exit(1);
@@ -47,6 +55,9 @@ function main() {
         process.exit(1);
     }
 
+    // Parse the xrefs data
+    let data = load_data(args.xrefs);
+    
     // Make the project path absolute
     args.project = path.resolve(args.project);
     
@@ -64,7 +75,7 @@ function main() {
         let reldir = path.dirname(relpath);
 
         // Format the file as HTML
-        let str = html(args.project, relpath);
+        let str = html(data, args.project, relpath);
 
         // Create intermediate directories in outdir as needed
         if (reldir.length > 0) {
@@ -81,6 +92,51 @@ function main() {
     });
 
     console.log("", logSymbols.success, "done");
+}
+
+function load_data(file) {
+
+    // Read the file as JSON
+    let content = fs.readFileSync(file, 'utf8');
+    let json = JSON.parse(content);
+
+    // Organize the data so that we can easily look up any symbol
+    // or reference and get back a canonical id.
+    let data = new Map();
+
+    // For each symbol
+    for (var symbol in json.symbols) {
+
+        // Skip things that are not real fields in the JSON
+        if (!json.symbols.hasOwnProperty(symbol))
+            continue;
+
+        // Sanity check
+        if (data.has(symbol)) {
+            console.log("Can't add symbol twice:", symbol);
+            process.exit(1);
+        }
+
+        // Make the symbol point to itself
+        data.set(symbol, symbol);
+
+        // For each reference to this symbol
+        let references = json.symbols[symbol];
+        references.forEach(function(ref) {
+
+            // Sanity check
+            if (data.has(ref)) {
+                console.log("Can't add reference twice:", ref);
+                process.exit(1);
+            }
+
+            // Make each reference point to the symbol as the
+            // canonical representation
+            data.set(ref, symbol);
+        });
+    }
+
+    return data;
 }
 
 function find_javascript_files(dir) {
@@ -109,123 +165,66 @@ function walk(dir, callback) {
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function html(project, file) {
+function html(data, project, file) {
     
     // Make paths absolute
     let abspath = path.join(project, file);
-
-    // How to make HTML element ids. Empty string means no id
-    let make_id = function(token) {
-        if (!token.type || token.type !== "function")
-            return "";
-        
-        return file + ":L" + token.line + ":" + token.offset;
-    };
-
-    // How to make HTML element classes. Empty string means no classes
-    let make_classes = function(token) {
-        let classes = ['token', token.type];
-        if (token.type && token.type === "function")
-            classes.push('indexed');
-        return classes;
-    };
+    
+    // Read in the file
+    let text = fs.readFileSync(abspath, 'utf8');
     
     // Tokenize the file
-    let tokens = tokenize(abspath);
+    let tokens = tokenize(text);
 
-    // Stringify the tokens into html
-    return stringify(tokens, make_id, make_classes);
-}
+    // Stringify the tokens into html, wrapping them with links to their
+    // canonical symbol if they're present in the xrefs file
+    return stringify(tokens, function(token) {
+        let id = file + ":L" + token.line + ":" + token.offset;
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-
-function tokenize(file) {
-    // Read in the file
-    let text = fs.readFileSync(file, 'utf8');
-
-    // Tokenize the text
-    let grammar = prism.languages['javascript'];
-    let tokens = prism.tokenize(text, grammar);
-
-    // Keep track of line and offset
-    let line = 0;
-    let offset = 0;
-
-    function newlines(str) {
-        let array = str.match(/\n/g);
-        if (!array)
-            return 0;
-        return array.length;
-    }
-
-    function extra(str) {
-        let last_index = str.lastIndexOf('\n');
-        if (last_index < 0)
-            return str.length;
+        let canonical = data.get(id);
+        if (!canonical)
+            return "";
         
-        return str.length - (last_index + 1);
-    }
-    
-    // Label tokens with their line and character offset
-    tokens.forEach(function(token) {
-
-        // Safety check
-        if (Array.isArray(token)) {
-            console.log("We can't handle nested tokens:", token);
-            process.exit(1);
-        }
-        
-        // If it's just a string, then it's probably whitespace
-        // (e.g. newlines and extra spaces). Adjust the line and
-        // offset counter accordingly
-        
-        if (typeof token == 'string') {
-            let lines = newlines(token);
-            line += lines;
-
-            if (lines > 0)
-                offset = 0;
-            
-            offset += extra(token);
-            return;
-        }
-
-        // Otherwise it's of type Token. Set the line and offset.
-        token.line = line;
-        token.offset = offset;
-        
-        // Adjust the offset by the length of the content. If this
-        // contained a real newline then it would just be a string,
-        // so no need to advance the line count
-        offset += token.length;
+        return "/search?symbol=" + canonical;
     });
-
-    return tokens;
 }
 
-function stringify(token, make_id, make_classes) {
-    if (typeof token == 'string') {
+function stringify(token, get_link) {
+    
+    // Base case
+    if (typeof token == 'string')
         return encode(token);
-    }
 
+    // Expand arrays
     if (Array.isArray(token)) {
         return token.map(function(element) {
-            return stringify(element, make_id, make_classes);
+            return stringify(element, get_link);
         }).join('');
     }
 
-    let tag = 'span';
-    let content = stringify(token.content, make_id, make_classes);
+    // Don't decorate whitespace
+    if (token.type === "whitespace")
+        return encode(token.content);
     
-    let id = make_id(token);
-    let id_str = (id === "" ? "" : ' id="' + id + '"');
-    
-    let classes = make_classes(token);
-    let class_str = (classes === "" ? "" : ' class="' + classes.join(' ') + '"');
+    // Get the link for the token
+    let link = get_link(token);
 
-    return '<' + tag + class_str + id_str + '>' + content + '</' + tag + '>';
+    // Don't decorate uninteresting strings
+    if (link === "" && token.type == "string")
+        return stringify(token.content, get_link);
+    
+    // Wrap the content in a link
+    let content = stringify(token.content, get_link);
+    if (link.length > 0) {
+        content = '<a class="xref" href="' + link + '">' + content + '</a>';
+    }
+
+    // Create the HTML element
+    let tag = 'span';
+    let classes = ['token', token.type];
+    let class_str = (classes === "" ? "" : ' class="' + classes.join(' ') + '"');
+    
+    return '<' + tag + class_str + '>' + content + '</' + tag + '>';
 }
 
 function encode(str) {

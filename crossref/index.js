@@ -11,6 +11,9 @@ const server = require('./server');
 const symbols = require('./symbols');
 const references = require('./references');
 
+// Put this in a different place
+const tokenize = require('../tokenize/tokenize');
+
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -55,6 +58,8 @@ async function main() {
     // For each of the files
     for (let file of files) {
 
+        let lines = fs.readFileSync(file, 'utf8').split('\n');
+
         // For each of the symbols
         let syms = await get_symbols(ctx, file);
         for (let symbol of syms) {
@@ -64,16 +69,18 @@ async function main() {
             if (kind !== "function")
                 continue;
 
+            symbol = ensure_correct_location(ctx, lines, symbol, kind);
+
             // Add the symbol to the graph
             await add_symbol(ctx, symbol);
         }
         
-        console.log("  ", logSymbols.success, file);
+        console.log("  ", logSymbols.success, file, "\n");
     }
 
     // Write the graph to a file as json
     write_json_graph(ctx);
-    console.log("\n", logSymbols.success, "wrote data to", ctx.config.out);
+    console.log("", logSymbols.success, "wrote data to", ctx.config.out);
     
     // Success
     console.log("", logSymbols.success, "done", "\n");
@@ -226,6 +233,41 @@ async function get_symbols(ctx, file) {
     }
     
     return symbol_result.symbols;
+}
+
+function ensure_correct_location(ctx, file_lines, symbol, kind) {
+
+    // Sanity check
+    let lineno = symbol.location.range.start.line;
+    if (lineno >= file_lines.length) {
+        console.log("symbol is one line", lineno,
+                    "but file only has", file_lines.length, "lines");
+        clean_exit(ctx, 1);
+    }
+
+    // Tokenize the line
+    let line = file_lines[lineno];
+    let tokens = tokenize(line);
+
+    // Find token that corresponds to symbol kind and adjust character
+    // offset to match
+    for (var token of tokens) {
+        if (token.type === kind) {
+            console.log("    ", "-",
+                        "symbol", symbol.name, "started at", symbol.location.range.start.character,
+                        "but tokenizer positions it at", token.offset);
+            symbol.location.range.start.character = token.offset;
+            return symbol;
+        }
+    }
+
+    // Something went wrong with the tokenizer or symbol data
+    console.log("couldn't find token type", kind, "in line", lineno);
+    console.log("\nline:");
+    console.log(line);
+    console.log("\ntokens:");
+    console.log(tokens);
+    clean_exit(ctx, 1);    
 }
 
 async function add_symbol(ctx, symbol) {
