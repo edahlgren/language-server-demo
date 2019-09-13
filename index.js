@@ -19,6 +19,37 @@ const test_file = path.join(project_path, 'index.js');
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
+// DONE 0. Parse symbols and find references, and store this
+//         information in a key-value store. Start only with
+//         function symbols and store everything in a JSON
+//         file, using the line and offset information to
+//         create the keys
+//
+//      1. Associate tokens with line and offset information
+//
+//      2. Give html span elements an link based on the line
+//         and offset information if they are a symbol with
+//         references
+//
+//      3. Load the JSON file into lunrjs and implement a basic
+//         query for the references of a symbol
+//
+//      4. Implement link-handling so that the lunrjs query is
+//         invoked when a link on a symbol is clicked
+//
+//      5. Create anchors to line numbers in the html so that
+//         the query page can jump to a line in a file
+//
+//      6. Create the HTML + CSS for the file pages and the
+//         query result pages
+//
+// You can obviously add search and snippets later, but this
+// is sort of the bare minimum you would need.
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
 function tokenize(file, language) {
 
     var out = [];

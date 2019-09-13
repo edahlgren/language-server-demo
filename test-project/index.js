@@ -1,14 +1,14 @@
+const path = require('path');
+const print = require('pretty-print');
+
+const walk = require('./walk');
+
 function main() {
-    bar();
-    foo();
-}
-
-function foo() {
-    bar();
-}
-
-function bar() {
-    console.log("hello world");
+    walk('.', function(file) {
+        if (path.extname(file) === ".js")
+            console.log(file);
+    });
+    print(['val1', 'val2', 'val3'], {leftPadding: 0});
 }
 
 main();
