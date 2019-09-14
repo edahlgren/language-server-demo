@@ -31,12 +31,6 @@ const test_file = path.join(project_path, 'index.js');
 //         and offset information if they are a symbol or a
 //         reference to a symbol
 //
-//      3. Load the JSON file into lunrjs and test a basic
-//         query for the references of a symbol
-//
-//      4. Implement link-handling so that the lunrjs query is
-//         invoked when a link on a symbol is clicked
-//
 // DONE 5. Create anchors to line numbers in the html so that
 //         the query page can jump to a line in a file
 //

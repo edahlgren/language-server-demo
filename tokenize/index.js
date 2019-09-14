@@ -8,6 +8,7 @@ const logSymbols = require('log-symbols');
 
 const tokenize = require('./tokenize');
 
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -178,17 +179,15 @@ function html(data, project, file) {
 
     // Stringify the tokens into html, wrapping them with links to their
     // canonical symbol if they're present in the xrefs file
-    let code = stringify(tokens, function(token) {
+    return stringify(tokens, function(token) {
         let id = file + ":L" + token.line + ":" + token.offset;
 
         let canonical = data.get(id);
         if (!canonical)
             return "";
         
-        return "/search?symbol=" + canonical;
+        return "/refs/" + canonical;
     });
-
-    return wrap_with_lines(code);
 }
 
 function stringify(token, get_link) {
@@ -231,31 +230,4 @@ function stringify(token, get_link) {
 
 function encode(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\u00a0/g, ' ');
-}
-
-function wrap_with_lines(code_html) {
-    let out = [];
-    out.push('<table class="source-file">');
-    out.push('<tbody>');
-    
-    let lines = code_html.split('\n');
-    let last = lines.length;
-    let lineno = 1;
-    
-    lines.forEach(function(line) {
-        if (lineno == last && line.length == 0)
-            return;
-        
-        out.push('<tr id="' + 'L' + lineno + '">');
-        out.push('<td class="line-number">' + lineno + '</td>');
-        out.push('<td class="code">' + line + '</td>');
-        out.push('</tr>');
-        
-        lineno += 1;
-    });
-
-    out.push('</tbody>');
-    out.push('</table>');
-    
-    return out.join('\n');
 }
