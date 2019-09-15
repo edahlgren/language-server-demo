@@ -4,16 +4,27 @@
 const fs = require('fs');
 const path = require('path');
 
-const prism = require('prismjs');
-const xref = require('./xrefs.js');
+const fsExtra = require('fs-extra');
+const cli = require('command-line-args');
+
+const crossref = require('./crossref/lib');
+const genhtml = require('./tokenize/lib');
+const template = require('./template/lib');
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
-const server_bin = './extra/javascript-typescript-langserver/lib/language-server-stdio';
-const project_path = path.resolve('./test-project');
-const test_file = path.join(project_path, 'index.js');
+const cliSpec = [
+    { name: 'server' },
+    { name: 'source' },
+    { name: 'templates' },
+    { name: 'workdir' },
+    { name: 'assets' }
+];
+
+
+main();
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,8 +45,10 @@ const test_file = path.join(project_path, 'index.js');
 // DONE 5. Create anchors to line numbers in the html so that
 //         the query page can jump to a line in a file
 //
-//      6. Create the HTML + CSS for the file pages and the
+// DONE 6. Create the HTML + CSS for the file pages and the
 //         query result pages
+//
+//      7. Test on larger projects
 //
 // You can obviously add search and snippets later, but this
 // is sort of the bare minimum you would need.
@@ -44,81 +57,74 @@ const test_file = path.join(project_path, 'index.js');
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function tokenize(file, language) {
+async function main() {
 
-    var out = [];
+    // Parse args
+    const args = cli(cliSpec);    
+    if (!args.server) {
+        console.log("missing --server: need a path to a language server");
+        process.exit(1);
+    }
+    if (!args.source) {
+        console.log("missing --source: need a path to source code directory");
+        process.exit(1);
+    }
+    if (!args.templates) {
+        console.log("missing --templates: need a path to html templates");
+        process.exit(1);
+    }
+    if (!args.workdir) {
+        console.log("missing --workdir: need a path to a directory to write output");
+        process.exit(1);
+    }
 
-    let text = fs.readFileSync(file, 'utf8');
-    let grammar = prism.languages[language];
-    let tokens = prism.tokenize(text, grammar);
+    // Files and directories to create in the working dir
+    let xrefs_file = path.join(args.workdir, "xrefs.json");
+    let snippets_dir = path.join(args.workdir, "snippets");
+    let static_dir = path.join(args.workdir, "static");
+    let assets_dir = path.join(args.workdir, "static", "assets");
 
-    var offset = 0;
-    var line = 0;
+    console.log("\n", "CROSS REFERENCING", "\n");
     
-    tokens.forEach(function(token) {
-        
-        /**
-         let regexp = /\n/g;
-         let str = '\n\n    ';
-         
-         let last_index = str.lastIndexOf('\n');
-         
-         let array = [...str.matchAll(regexp)];
-         
-         console.log('num newlines:', array.length);
-         console.log('last newline at:', last_index);
-         console.log('extra space:', str.length - (last_index + 1));
-         **/
-        
-        if (typeof token == 'string') {
-            // Move on.
-            var len = token.length;
-            
-        }
-        
+    // Cross reference the source code
+    await crossref.exec({
+        server: path.resolve(args.server),
+        dir: path.resolve(args.source),
+        out: xrefs_file
     });
+
+    console.log("\n", "GENERATING HTML SNIPPETS", "\n");
     
-    return out;
+    // Ensure the snippets dir exists
+    fsExtra.ensureDirSync(snippets_dir);
+    
+    // Generate html snippets of each source file
+    genhtml.exec({
+        project: args.source,
+        xrefs: xrefs_file,
+        outdir: snippets_dir
+    });
+
+    console.log("\n", "TEMPLATING HTML", "\n");
+    
+    // Ensure the static dir exists
+    fsExtra.ensureDirSync(static_dir);
+    
+    // Template the final html files
+    template.exec({
+        xrefs: xrefs_file,
+        template_dir: args.templates,
+        html: snippets_dir,
+        outdir: static_dir
+    });
+
+    console.log("\n", "MOVING ASSETS", "\n");
+    
+    // If there are assets, ensure that they're copied
+    if (args.assets)
+        fsExtra.copySync(args.assets, assets_dir);
+    
+    console.log("\n", "DONE", "\n");
+    
+    process.exit(0);
 }
-
-async function exec() {
-
-    // Note: 1 & 2 can be done separately. But we should probably
-    // do 2 first so we can check that the hashes we find during
-    // tokenization actually have data associated with them
-    
-    // 1. Generate the HTML with line number tags that we can
-    //    jump to
-    
-    // Get tokens with extra offset and line number information
-    let tokens = tokenize(test_file, 'javascript');
-
-    // Wrap them them in span elements and give them ids unique
-    // ids that combine the name, type, file, line, and offset
-    // into a hash. Maybe make them into links
-    // ...
-    
-    // Add line numbers
-    // ...
-
-    
-    // 2. Get the reference information and write it to an XML or
-    //    YAML file that's easy to load and parse later
-    /**
-    let xref_result = await xref.get_references(server_bin,
-                                                project_path,
-                                                test_file);
-    if (!xref_result.ok)
-        return xref_result;
-
-    xref.print_references(xref_result.xrefs);
-     **/
-
-
-    // 3. Write javascript to handle the links and jump to the
-    //    correct file + line (if only one option), or show the
-    //    full results of options (defs, refs, etc) otherwise
-    
-}
-
-exec();

@@ -11,7 +11,7 @@ function Token(type, content, alias, length, greedy) {
 }
 
 function token_type(whitespace, string_type) {
-    let type = "string";
+    let type = "chars";
     if (string_type)
         type = string_type;
     if (whitespace)

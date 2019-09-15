@@ -1,3 +1,3 @@
 #!/bin/bash
 
-node index.js --xrefs ../crossref/xrefs.json --project ../test-project --outdir ../html
+node index.js --xrefs ../crossref/xrefs.json --project ../test-project --outdir ../snippets

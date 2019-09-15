@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>/</title>
+    <link rel="stylesheet" type="text/css" href="/assets/main.css">
+  </head>
+
+  <body>
+    <div class="container">
+      
+      <header>
+        <div class="menu">
+          <ul>
+            <li><a href="/">/</a></li>
+          </ul>
+        </div>
+      </header>
+
+      <main>
+
+        <h2>Definition</h2>
+        <ul class="symbol">
+          <li class="reference">
+            <a href="/file/{{symbol.file}}.html#L{{symbol.line}}">
+              {{symbol.file}} L{{symbol.line}}
+            </a>
+          </li>
+        </ul>
+        
+        <h2>References</h2>
+        <ul class="references">
+          {{#references}}
+          <li class="reference">
+            <a href="/file/{{file}}.html#L{{line}}">
+              {{file}} L{{line}}
+            </a>
+          </li>
+          {{/references}}
+        </ul>
+        
+      </main>
+      
+    </div>
+  </body>
+</html>

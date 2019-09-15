@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>/</title>
+    <link rel="stylesheet" type="text/css" href="/assets/main.css">
+  </head>
+
+  <body>
+    <div class="container">
+      
+      <header>
+        <div class="menu">
+          <ul>
+            <li><a href="/">/</a></li>
+            {{#paths}}
+            <li>{{&.}}</li>
+            {{/paths}}
+          </ul>
+        </div>
+      </header>
+
+      <main>
+        <ul class="directory-entries">
+          {{#entries}}
+          <li class="entry-{{type}}"><a href="/file/{{path}}">{{name}}</a></li>
+          {{/entries}}
+        </ul>
+      </main>
+      
+    </div>
+  </body>
+</html>
