@@ -77,7 +77,7 @@ function renderHome(config) {
 
 function renderFiles(config, dir) {
 
-    console.log("\n", "rendering files and directories ...");
+    console.log("\n", "rendering files and directories for", dir, "...");
     
     fs.readdirSync(dir).forEach(function(file) {
         // Is this path a directory?
@@ -90,7 +90,16 @@ function renderFiles(config, dir) {
 
         // Render the directory or file
         let html = renderer(config, _path);
+
+        // Create the output path
         let out = path.join(config.outdir, "file", relpath);
+        if (isDirectory)
+            out = path.join(out, "index.html");
+
+        // Ensure parent directories exist
+        fsExtra.ensureDirSync(path.dirname(out));
+
+        // Write the file or dir
         fs.writeFileSync(out, html, 'utf8');
 
         console.log("  ", logSymbols.success, out);
@@ -238,6 +247,10 @@ function renderReferences(config) {
         let basename = symbol.split(":").join("_") + ".html";
         let out = path.join(config.outdir, "refs", basename);
         
+        // Ensure parent directories exist
+        fsExtra.ensureDirSync(path.dirname(out));
+
+        // Write the html
         fs.writeFileSync(out, html, 'utf8');
         
         console.log("  ", logSymbols.success, out);

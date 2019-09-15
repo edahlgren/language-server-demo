@@ -34,7 +34,7 @@ async function main() {
         process.exit(1);
     }
     
-    crossref.exec({
+    await crossref.exec({
         server: path.resolve(args.server),
         dir: path.resolve(args.dir),
         out: path.resolve(args.out ? args.out : "./xrefs.json")

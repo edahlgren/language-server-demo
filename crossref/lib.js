@@ -5,9 +5,9 @@ const util = require('util');
 const logSymbols = require('log-symbols');
 const { URI } = require('vscode-uri');
 
-const server = require('./server');
-const symbols = require('./symbols');
-const references = require('./references');
+const server = require('./util/server');
+const symbols = require('./util/symbols');
+const references = require('./util/references');
 
 // Put this in a different place
 const tokenize = require('../tokenize/tokenize');

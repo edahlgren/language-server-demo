@@ -27,31 +27,40 @@ const cliSpec = [
 main();
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-
-
-// DONE 0. Parse symbols and find references, and store this
-//         information in a key-value store. Start only with
-//         function symbols and store everything in a JSON  
-//         file, using the line and offset information to   
-//         create the keys                                  
-//                                                          
-// DONE 1. Associate tokens with line and offset information
+// YIPEE it works!!
 //
-// DONE 2. Give html span elements a link based on the line
-//         and offset information if they are a symbol or a
-//         reference to a symbol
+// You can obviously add search and references snippets later,
+// but this is sort of the bare minimum you would need.
 //
-// DONE 5. Create anchors to line numbers in the html so that
-//         the query page can jump to a line in a file
+// It works in 3 stages:
 //
-// DONE 6. Create the HTML + CSS for the file pages and the
-//         query result pages
+//   1. Executes a language server to find the def-ref information
+//      about files in a project. There will be varying levels of quality
+//      between different language servers, but generally they seem to
+//      return _some_ useful data at least. The def-ref information is
+//      stored in JSON file simply as:
 //
-//      7. Test on larger projects
+//      dir: <------------------------- project directory root
+//      symbols: {
+//          file:line:offset: [ <------ symbol
+//              file:line:offset, <---- references
+//              ...
+//          ],
+//          ...
 //
-// You can obviously add search and snippets later, but this
-// is sort of the bare minimum you would need.
+//   2. Executes a tokenizer to transform source code files into tokens,
+//      which are used to wrap the source code in labeled HTML span elements
+//      (for syntax highlighting) and links (for jumping to defs and refs).
+//      Any tokenizer could be used, but this prototype uses prismjs for
+//      the convenience of directly executing javascript
+//
+//   3. Uses the cross reference data from step 1 and the html output from step
+//      2 to fill in html templates for the final website files. All website
+//      content is static, so you can view the entire site simply by running:
+//
+//        $ cd WORKDIR/static
+//        $ http-server
+//
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////
